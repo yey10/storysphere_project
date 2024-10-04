@@ -11,3 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class,  'register']);  // register new user
 Route::post('/login', [AuthController::class, 'login']); //Loguear user
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']); // Cerrar sesión
+});

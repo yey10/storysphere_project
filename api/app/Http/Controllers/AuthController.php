@@ -13,58 +13,65 @@ class AuthController extends Controller
     
     //Método para registrar usuarios
 
-    public function register(Request $request){
-        //Validar los datos con Validator
-
+    public function register(Request $request)
+    {
+        // Validar los datos con Validator
         $validator = Validator::make($request->all(), [
-            'nombre_usuario' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'biografia' => 'required|string|max:500',
-            'foto_perfil' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'biography' => 'required|string|max:500',
+            'profile_photo' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
         ]);
-
-        //Verificar si la validación falla
-        if($validator->fails()){
+    
+        // Verificar si la validación falla
+        if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        //Manejar la subida del archivo de imágen
-
-        if ($request->hasFile('foto_perfil')) {
-            //obtener el archivo
-            $file = $request->file('foto_perfil');
-            //generar el nombre del archivo
-            $nombreArchivo =Str::random(10). '.' . $file->getClientOriginalExtension();
-            //almacenar el archivo
-            $file->storeAs('public/fotos_perfil/', $nombreArchivo);
-            //guardar el nombre del archivo en la base de datos
-            $foto_perfil = $nombreArchivo;
-        
+    
+        // Manejar la subida del archivo de imágen
+        $profile_photo = null;
+        if ($request->hasFile('profile_photo')) {
+            try {
+                $file = $request->file('profile_photo');
+                $nombreArchivo = Str::random(10) . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/fotos_perfil/', $nombreArchivo);
+                $profile_photo = $nombreArchivo;
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error al subir la imagen'], 500);
+            }
         }
-
-        //Crear el nuevo usuario en la base de datos
+    
+        // Crear el nuevo usuario en la base de datos
         $user = User::create([
-            'nombre_usuario' => $request->nombre_usuario,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'biografia' => $request->biografia,
-            'foto_perfil' => $foto_perfil ?? null,
+            'biography' => $request->biography,
+            'profile_photo' => $profile_photo,
         ]);
+    
+        // Asignar los roles al usuario
+        if ($request->has('roles')) {
+            $user->roles()->attach($request->roles); // Asignar múltiples roles
+        } else {
+        $user->roles()->attach([1]); // Asignar el rol por defecto con id 1
+        }
 
-        //generar token con Sanctum (Este token servirá para identificar al usuario al momento de loguearse)
+
+        // Generar token con Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        //Retornar mensaje de éxito
+    
+        // Cargar la relación roles para obtener los nombres
+        $user->load('roles');
+        // Retornar mensaje de éxito
         return response()->json([
-        'message' => 'Usuario creado con éxito',
-        'user' => $user,
-        'access_token' => $token,
-        'token_type' => 'Bearer',
+            'message' => 'Usuario creado con éxito',
+            'user' => $user,
+            'roles' => $user->roles->pluck('name'), // Mostrar los nombres de los roles
+            'access_token' => $token,
+            'token_type' => 'Bearer',
         ], 201);
-
-
-
     }
 
 
@@ -89,8 +96,7 @@ class AuthController extends Controller
         }
     
         // Generar un nuevo Token con Sanctum
-        $token = $user->createToken('auth_token')->plainTextToken;
-    
+        $token = $user->createToken('auth_token', ['tokenable_id' => $user->id, 'tokenable_type' => get_class($user)]);
         // Devolver respuesta con el token
         return response()->json([
             'message' => 'Usuario logueado con éxito',
@@ -100,6 +106,17 @@ class AuthController extends Controller
         ], 200);
     }
     
+
+     // Método para logout
+    public function logout(Request $request)
+    {
+         // Revocar el token actual que está utilizando el usuario autenticado
+         $request->user()->currentAccessToken()->delete();
+ 
+         return response()->json([
+             'message' => 'Cierre de sesión exitoso'
+         ]);
+    }
 
 
 
