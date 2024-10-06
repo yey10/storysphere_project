@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Roles;
+use App\Models\Role;
+use App\Models\Story;
 class User extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable; // Incluye el trait HasApiTokens aquí
@@ -26,23 +27,40 @@ class User extends Authenticatable
     protected $table = 'users'; // Asegúrate de que esté apuntando a la tabla correcta
     protected $primaryKey = 'id_user'; // Mantén esto como 'id_user' si es el campo autoincremental
 
-    // Aquí puedes definir relaciones adicionales si las tienes
+
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user', 'id_user', 'id_rol');
     }
-/*
-    // Ejemplo de relación con historias
+
+
     public function stories()
     {
+        
         return $this->hasMany(Story::class, 'id_user', 'id_user');
     }
 
-    // Ejemplo de relación con comentarios
+
+/*
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'id_user', 'id_user');
     }
+
+          public function likes()
+    {
+        return $this->hasMany(Like::class, 'id_user');
+    }
+
+      public function followers()
+    {
+        return $this->hasMany(Follower::class, 'id_followed');
+    }
+
+       public function following()
+    {
+        return $this->hasMany(Follower::class, 'id_follower');
+    }
 */
-    // Otros métodos o propiedades personalizadas pueden ir aquí
 }
