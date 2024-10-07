@@ -13,13 +13,17 @@ use Illuminate\Support\Facades\Route;
 //Rutas para autenticación
 Route::post('/register', [AuthController::class,  'register']);  // register new user
 Route::post('/login', [AuthController::class, 'login']); //Loguear user
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']); // Cerrar sesión
-    Route::apiResource('stories', StoryController::class)->only(['store', 'update', 'destroy']); // rutas protegidas
 });
 
-// Rutas públicas
-Route::apiResource('stories', StoryController::class)->only(['index', 'show']); // rutas públicas
+
+//Rutas para creacion de historias
+Route::apiResource('stories', StoryController::class)->only(['index', 'show' ]);  //rutas publicas
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('stories', StoryController::class)->only(['store', 'update', 'destroy']); //rutas protegidas (se necesita autenticación)
+});
 
 
 // accion, drama, ficcion, misterio, romance, terror
