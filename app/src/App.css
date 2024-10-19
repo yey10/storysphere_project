@@ -1,42 +1,84 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap');
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
+*{margin: 0; padding: 0; box-sizing: border-box; font-family: "DynaPuff", system-ui;}
+body{background-color: #151515;}
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.container{width: 100%; padding-top: 80px; padding-left: 85px;}
+
+/* header */
+.header{width: 100%;}
+
+  /* navbar */
+  .header .navbar{width: 100%; height: 80px; position: absolute; top: 0; left: 0;}
+  .header .navbar div:nth-child(1){width: 200px; margin: 5px 0; margin-left: 20vh; position: absolute;}
+  .header .navbar div:nth-child(1) img{width: 100%;}
+  .header .navbar ul{float: right; margin-right: 10vh;}
+  .header .navbar ul li{display: inline-block; line-height: 80px; margin-right: 40px;}
+  .header .navbar ul li a{text-decoration: none; color: white; font-size: 20px;}
+  .header .navbar ul li:first-child{margin-right: 80px;}
+  .header .navbar ul li:first-child a{background-color: #ffff00; padding: 5px 20px; border-radius: 50px;}
+  .header .navbar ul li:first-child:hover{transform: scale(1.1); transition: .2s;}
+  .header .navbar ul li:first-child a:hover{box-shadow: 0 0 10px #f9db5c;}
+  .header .navbar ul li:nth-child(2){position: relative;}
+  .header .navbar ul li:nth-child(2) input{height: 35px; border: none; border-radius: 15px; padding-left: 20px; width: 0; transition: all 1s ease; line-height: 80px; outline: none;}
+  .header .navbar ul li:nth-child(2) span{position: absolute; right: -30px; text-align: center; line-height: 50px; background-color: #D4AF37; width: 50px; height: 50px; border-radius: 50%; margin: 15px; cursor: pointer; transition: all 1s ease-in-out;}
+  .header .navbar ul li:nth-child(2):hover input{width: 400px; transition: all 1s ease-in-out; border: 1px solid #D4AF37; box-shadow: 0px 0px 5px #f9db5c;}
+  .header .navbar ul li:nth-child(2):hover span{transform: rotate(-360deg); transition: all 1s ease-in-out;}
+
+
+  /* sidebar */
+  .header .sidebar{position: fixed; top: 0; left: 0; height: 100vh; width: 85px; display: flex; flex-direction: column; overflow-x: hidden; backdrop-filter: blur(10px); background-color: #0505053d; padding: 25px 20px; transition: all 0.5s ease; z-index: 99999999;}
+  .header .sidebar:hover{width: 260px;}
+  .header .sidebar .sidebar-header{display: flex; align-items: center;}
+  .header .sidebar .sidebar-header img{width: 42px; border-radius: 50%;}
+  .header .sidebar .sidebar-header h2{font-size: 1.25rem; font-weight: 600; color: white; margin-left: 23px;}
+  .header .sidebar .sidebar-links{list-style: none; margin-top: 20px; height: 80%; overflow-y: auto; scrollbar-width: none;}
+  .header .sidebar .sidebar-links h4{color: white; font-weight: 500; margin: 10px 0; white-space: nowrap; position: relative;}
+  .header .sidebar .sidebar-links h4 span{opacity: 0;}
+  .header .sidebar:hover .sidebar-links h4 span{opacity: 1; color: #D4AF37;}
+  .header .sidebar .sidebar-links h4 .separator{position: absolute; left: 0; top: 50%; width: 100%; height: 1px; transform: scaleX(1); transform: translateY(-50%); background-color: #D4AF37; transform-origin: right; transition-duration: .2s;}
+  .header .sidebar:hover .sidebar-links h4 .separator{transition-delay: 0s; transform: scaleX(0);}
+  .header .sidebar .sidebar-links li a{display: flex; align-items: center; gap: 0 20px; color: #dbd4d4e3; font-weight: 500; padding: 15px 10px; white-space: nowrap; text-decoration: none;}
+  .header .sidebar .sidebar-links li a:hover{background-color: #ffffff2d; color: white; border-radius: 5px;}
+  .header .sidebar .user-account{margin-top: 20px; padding: 12px 10px; margin-left: -10px;}
+  .header .sidebar .user-account .user-profile{color: #e5dede; display: flex; align-items: center;}
+  .header .sidebar .user-account .user-profile img{width: 42px; border-radius: 50%;}
+  .header .sidebar .user-account .user-profile .user-detail{margin-left: 23px; white-space: nowrap;}
+  .header .sidebar .user-account .user-profile .user-detail h3{font-size: 1rem; font-weight: 600;}
+  .header .sidebar .user-account .user-profile .user-detail span{font-size: 0.775rem; font-weight: 600; display: block; margin-top: 0;}
+  .header .sidebar:hover .user-account{background-color: #ffffff2d; border-radius: 5px; }
+
+
+  /* responsive */
+  @media screen and (max-width: 1024px) {
+      .header .navbar ul{margin-right: 5vh;}
+      .header .navbar ul li:first-child{margin-right: 40px;}
+      .header .navbar ul li:nth-child(2):hover input{width: 300px;}
   }
-  to {
-    transform: rotate(360deg);
+
+  @media screen and (max-width: 768px) {
+      .header .navbar div:nth-child(1){width: 150px; height: 50px; margin: 15px 0; margin-left: 15vh;}
+      .header .navbar ul{margin-right: 5vh;}
+      .header .navbar ul li{margin-right: 20px;}
+      .header .navbar ul li:nth-child(2):hover input{width: 250px;}
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  @media screen and (max-width: 500px) {
+      .header .navbar div:nth-child(1){margin-left: 12vh; position: absolute;}
+      .header .navbar ul li a{font-size: 16px;}
+      .header .navbar ul li:first-child{position: absolute; right: 60px;}
+      .header .navbar ul li:nth-child(2) input{height: 25px;}
+      .header .navbar ul li:nth-child(2) span{width: 40px; height: 40px; margin: 20px 15px; line-height: 40px;}
+      .header .navbar ul li:nth-child(2):hover{background-color: #050505;}
+      .header .navbar ul li:nth-child(2):hover input{width: 365px;}
   }
-}
 
-.card {
-  padding: 2em;
-}
+  @media screen and (max-width: 375px) {
+      .header .navbar div:nth-child(1){width: 100px; height: 50px; margin-left: 10vh;}
+      .header .navbar ul{margin-right: 2vh;}
+      .header .navbar ul li a{font-size: 13px;}
+      .header .navbar ul li:first-child{position: absolute; right: 40px;}
+      .header .navbar ul li:nth-child(2):hover input{width: 258px;}
+  }
 
-.read-the-docs {
-  color: #888;
-}
+
