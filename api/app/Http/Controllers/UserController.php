@@ -37,7 +37,9 @@ class UserController extends Controller
                 $query->where('email', 'like', '%' . $request->email . '%');
             }
 
-            return response()->json(['users' => $query], 200);
+            $users = $query->get();
+
+            return response()->json(['users' => $users], 200);
 
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -60,10 +62,16 @@ class UserController extends Controller
             $authUser = Auth::user(); //usuario autenticado
 
             $user = User::findOrfail($id); // usuario cuyo perfil se actualizara
+              // Depuración para verificar los valores
+            dd([
+                'authUser_id' => $authUser->id_user,
+                'authUser_role' => $authUser->id_rol,
+                'user_to_delete_id' => $user->id_user
+            ]);
 
             // Verificar si el usuario autenticado es el dueño del perfil o es un administrador
 
-            if ($authUser->id_user !== $user->id_user ||  $authUser->id_rol !== 1) {
+            if ($authUser->id_user !== $user->id_user &&  $authUser->id_rol !== 1) {
                 return response()->json(['message' => 'No tienes permiso para realizar esta acción'],403);
             }
 

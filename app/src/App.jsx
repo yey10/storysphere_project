@@ -1,11 +1,35 @@
-import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import ReactImg1 from './assets/img/logo.jpeg';
 import ReactImg2 from './assets/img/profile.jpg';
 import ReactImg3 from './assets/img/StorySphere.png';
+import {  useAuth } from './AuthContext';
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
+
+
+  const { isAuthenticated } = useAuth();  // Obtener el estado de autenticación
+  const navigate = useNavigate();
+
+  useEffect(() =>{
+      // Redirigir a la página de login si el usuario no está autenticado
+
+      if (!isAuthenticated) {
+        navigate('/login');
+      }
+  }, [ isAuthenticated, navigate]);  // Agregar navigate como dependencia para que se ejecute cada vez
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
       <div className="header">

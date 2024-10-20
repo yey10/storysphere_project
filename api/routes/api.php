@@ -26,6 +26,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('stories', StoryController::class)->only(['store', 'update', 'destroy']); //rutas protegidas (se necesita autenticación)
 });
 
+//Obtener historias de un usuario
+Route::middleware('auth:sanctum')->get('users/{user}/stories', [StoryController::class, 'getUserStories']);
+//Obtener dueño de una historia
+Route::middleware('auth:sanctum')->get('users/{id}/owner', [StoryController::class, 'getStoryOwner']);
+
 
 //Rutas para los usuarios
 
@@ -35,6 +40,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::delete('users/{id}', [UserController::class, 'deleteAccount']); //eliminar cuenta
     Route::put('users/{id}/role', [UserController::class, 'updateRole']);
 });
+
+
+
 
 
 
