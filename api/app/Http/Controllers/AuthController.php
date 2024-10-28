@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -19,7 +18,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'biography' => 'required|string|max:500',
-            'profile_photo' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'profile_photo' => 'nullable|image|mimes:jpg,png,jpeg,gif',
         ]);
 
         // Verificar si la validación falla
@@ -31,10 +30,7 @@ class AuthController extends Controller
             // Manejar la subida del archivo de imagen
             $profile_photo = null;
             if ($request->hasFile('profile_photo')) {
-                $file = $request->file('profile_photo');
-                $nombreArchivo = Str::random(10) . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/fotos_perfil/', $nombreArchivo);
-                $profile_photo = $nombreArchivo;
+                $profile_photo = $request->file('profile_photo')->store('fotos_perfil', 'public');
             }
 
             // Crear el nuevo usuario en la base de datos
